@@ -1,0 +1,203 @@
+package org.piaohao.redisManager;
+
+import com.intellij.uiDesigner.core.GridConstraints;
+import com.intellij.uiDesigner.core.GridLayoutManager;
+import com.intellij.uiDesigner.core.Spacer;
+import lombok.Data;
+
+import javax.swing.*;
+import javax.swing.plaf.basic.BasicListUI;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.List;
+
+@Data
+public class SessionDialog extends JDialog {
+    private JPanel contentPane;
+    private JButton connectBtn;
+    private JButton closeBtn;
+    private JButton createBtn;
+    private JButton editBtn;
+    private JList<Session> clientList;
+    private JButton deleteBtn;
+    private JToolBar toolBar;
+
+    private int mHoveredJListIndex = -1;
+
+    private MainPanel mainPanel;
+
+    public SessionDialog(JFrame frame, MainPanel mainPanel) {
+        super(frame);
+        this.mainPanel = mainPanel;
+        setTitle("会话");
+        setContentPane(contentPane);
+        setModal(true);
+        getRootPane().setDefaultButton(connectBtn);
+
+//        refreshList();
+//        clientList.setUI(new CustomUI());
+//        clientList.setCellRenderer(new DefaultListCellRenderer() {
+//            @Override
+//            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+//                Session entry = (Session) value;
+//                setText(entry.getAddress() + ":" + entry.getPort());
+//                if (mHoveredJListIndex == index) {
+//                    setBackground(new Color(0, 0, 128));
+//                    setForeground(Color.white);
+//                    ((CustomUI) list.getUI()).setCellHeight(index, 40, 30);
+//                } else {
+//                    setBackground(Color.white);
+//                    setForeground(Color.black);
+//                    ((CustomUI) list.getUI()).setCellHeight(index, 30);
+//                }
+//                return this;
+//            }
+//        });
+//        clientList.addMouseListener(new MouseAdapter() {
+//            @Override
+//            public void mouseClicked(MouseEvent e) {
+//                if (e.getClickCount() == 2 && SwingUtilities.isLeftMouseButton(e)) {
+//                    connect();
+//                }
+//            }
+//        });
+//        clientList.addMouseMotionListener(new MouseAdapter() {
+//            @Override
+//            public void mouseMoved(MouseEvent e) {
+//                int index = clientList.locationToIndex(e.getPoint());
+//                if (index != mHoveredJListIndex) {
+//                    mHoveredJListIndex = index;
+//                    clientList.repaint();
+//                }
+//            }
+//        });
+//        closeBtn.addActionListener(e -> dispose());
+//        connectBtn.addActionListener(e -> connect());
+//        createBtn.addActionListener(e -> {
+//            EditSessionDialog editSessionDialog = new EditSessionDialog(this, null);
+//            editSessionDialog.setVisible(true);
+//        });
+//        editBtn.addActionListener(e -> {
+//            Session selectedValue = clientList.getSelectedValue();
+//            if (selectedValue == null) {
+//                JOptionPane.showMessageDialog(this, "请选择会话");
+//                return;
+//            }
+//            EditSessionDialog editSessionDialog = new EditSessionDialog(this, selectedValue);
+//            editSessionDialog.setVisible(true);
+//        });
+//        deleteBtn.addActionListener(e -> {
+//            Session selectedValue = clientList.getSelectedValue();
+//            if (selectedValue == null) {
+//                JOptionPane.showMessageDialog(this, "请选择会话");
+//                return;
+//            }
+//            SessionService.getInstance().delete(selectedValue.getId());
+//        });
+    }
+
+    private void connect() {
+        Session selectedValue = clientList.getSelectedValue();
+        if (selectedValue == null) {
+            JOptionPane.showMessageDialog(this, "请选择会话");
+            return;
+        }
+        RedisManager.init(selectedValue.getAddress(), selectedValue.getPort(), selectedValue.getPassword());
+        mainPanel.getAddressLabel().setText("当前连接信息:  " + selectedValue.getAddress() + ":" + selectedValue.getPort());
+        dispose();
+    }
+
+    public void refreshList() {
+        List<Session> sessions = SessionService.getInstance().all();
+        DefaultListModel<Session> listModel = new DefaultListModel<>();
+        for (Session session : sessions) {
+            listModel.addElement(session);
+        }
+        clientList.setModel(listModel);
+    }
+
+    public static void main(String[] args) {
+        SessionDialog sessionDialog = new SessionDialog(null, null);
+        sessionDialog.setSize(400, 300);
+        sessionDialog.setLocationRelativeTo(null);
+        sessionDialog.setVisible(true);
+    }
+
+    {
+// GUI initializer generated by IntelliJ IDEA GUI Designer
+// >>> IMPORTANT!! <<<
+// DO NOT EDIT OR ADD ANY CODE HERE!
+        $$$setupUI$$$();
+    }
+
+    /**
+     * Method generated by IntelliJ IDEA GUI Designer
+     * >>> IMPORTANT!! <<<
+     * DO NOT edit this method OR call it in your code!
+     *
+     * @noinspection ALL
+     */
+    private void $$$setupUI$$$() {
+        contentPane = new JPanel();
+        contentPane.setLayout(new GridLayoutManager(3, 1, new Insets(10, 10, 10, 10), -1, -1));
+        final JPanel panel1 = new JPanel();
+        panel1.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
+        contentPane.add(panel1, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null, 0, false));
+        final Spacer spacer1 = new Spacer();
+        panel1.add(spacer1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+        final JPanel panel2 = new JPanel();
+        panel2.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1, true, false));
+        panel1.add(panel2, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        connectBtn = new JButton();
+        connectBtn.setText("连接");
+        panel2.add(connectBtn, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        closeBtn = new JButton();
+        closeBtn.setText("关闭");
+        panel2.add(closeBtn, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JPanel panel3 = new JPanel();
+        panel3.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+        contentPane.add(panel3, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        final JScrollPane scrollPane1 = new JScrollPane();
+        panel3.add(scrollPane1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        clientList = new JList();
+        scrollPane1.setViewportView(clientList);
+        toolBar = new JToolBar();
+        toolBar.setFloatable(false);
+        contentPane.add(toolBar, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(-1, 20), null, 0, false));
+        createBtn = new JButton();
+        createBtn.setText("新建");
+        toolBar.add(createBtn);
+        editBtn = new JButton();
+        editBtn.setText("编辑");
+        toolBar.add(editBtn);
+        deleteBtn = new JButton();
+        deleteBtn.setText("删除");
+        toolBar.add(deleteBtn);
+    }
+
+    /**
+     * @noinspection ALL
+     */
+    public JComponent $$$getRootComponent$$$() {
+        return contentPane;
+    }
+
+    class CustomUI extends BasicListUI {
+        public CustomUI() {
+            super();
+            cellHeights = new int[2];
+        }
+
+        public void setCellHeight(int index, int value, int defaultHeight) {
+            for (int i = 0; i < cellHeights.length; i++) {
+                cellHeights[i] = defaultHeight;
+            }
+            cellHeights[index] = value;
+        }
+
+        void setCellHeight(int index, int i) {
+            cellHeights[index] = i;
+        }
+    }
+}
